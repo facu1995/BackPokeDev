@@ -3310,4 +3310,6 @@ const movesNameURL={
     ]
 }
 
-export default movesNameURL;
+module.exports= {
+    movesNameURL
+}

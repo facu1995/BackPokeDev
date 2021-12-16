@@ -4,9 +4,22 @@ const express = require("express");
 const multer = require("multer");
 let { v4: uuid } = require("uuid"); //se usar para el hash
 const dayjs = require("dayjs");
+const axios = require("axios");
+
+//delay
+const delay = require('delay');
 
 
 //mocks
+const { pokemonNameURL } = require('./mocks/pokemon_mocks.js');
+const { movesNameURL } = require('./mocks/moves_mocks');
+const { moveAllInfo } = require('./mocks/movesAllInfo_mocks');
+const { pokemonAllInfo } = require('./mocks/pokemonAllInfo_mocks');
+const { speciesAll } = require('./mocks/speciesAll_mocks');
+const { evolvesAll } = require('./mocks/evolvesAll_mocks');
+//init
+const { pokemonInit } = require('./initJson/pokemonInitJSON.js');
+const { MoveInit } = require('./initJson/movesInitJSON.js');
 
 
 const app = express();
@@ -24,7 +37,7 @@ const multerConfig = multer.diskStorage({
    }
 });
 const multerMiddle = multer({ storage: multerConfig })
-
+log(movesNameURL.results.length,moveAllInfo.length);
 
 app.use(cors()); // permite conectar con servidores distintas
 app.use(methodOverride());
@@ -36,41 +49,41 @@ app.listen(port, () => {
    log("start server " + port);
 });
 
-let users = [
-   { "email": "foo@foo.com", "name": "foo", "pass": "foo123" },
-   { "email": "bar@bar.com", "name": "bar", "pass": "bar123" },
-   { "email": "qux@qux.com", "name": "qux", "pass": "qux123" },
-];
-
 app.get("/users", (req, res) => {
    res.send(users);
 });
-
-app.get("/reset", (req, res) => {
-   users = [];
+//endPoint Pokemon
+app.get("/pokemon", (req, res) => {
+   res.send(pokemonNameURL);
+});
+app.get("/pokemonesAll", (req, res) => {
+   res.send(arrayPokemones);
+});
+app.get("/pokemonOne/:id", (req, res) => {
+   let i=parseInt(req.params.id)-1;
+   res.send(pokemonAllInfo[i]);
+});
+app.get("/specieOne/:id", (req, res) => {
+   let i=parseInt(req.params.id)-1;
+   res.send(speciesAll[i]);
+});
+app.get("/evolvesOne/:id", (req, res) => {
+   let i=parseInt(req.params.id)-1;
+   res.send(evolvesAll[i]);
+});
+//endPoint Moves
+app.get("/moves", (req, res) => {
+   res.send(movesNameURL);
+});
+app.get("/movesAll", (req, res) => {
+   res.send(arrayPokemones);
+});
+app.get("/movesOne/:id", (req, res) => {
+   let i=parseInt(req.params.id)-1;
+   res.send(moveAllInfo[i]);
 });
 
-app.get("/user/unmail/:email", (req, res) => {
-   res.send(users.filter(el => el.email == req.params.email));
-});
 
-app.get("/usersEmail/:email", (req, res) => {
-   let email = req.params.email;
-   let arrayEmail = email.split(",");
-   let resp = [];
-   arrayEmail.forEach((email) => {
-      users.forEach((user) => {
-         if (user.email == email) {
-            resp.push(user);
-         }
-      });
-   })
-   res.send(resp);
-});
-
-/* app.get("/user/name/", (req, res) => {
-   res.send(users.filter(el => (el.name === req.query.name)));
-}); */
 app.get("/users/name", (req, res) => {
    let arrayNombre = req.query.nombre;
    let resul = [];
@@ -85,23 +98,12 @@ app.get("/users/name", (req, res) => {
    res.send(resul);
 })
 
-app.post("/user", (req, res) => {
-   users.push({ email: req.body.email, name: req.body.nombre, pass: req.body.pass });
-   res.send("usuario creado");
+app.post("/addMove", (req, res) => {
+   const [name,type,power,description]=req.body
+   users.push({ id,name, power,description, type: { name: type } });
 });
 
-app.delete("/user/borrarUno/:email", (req, res) => {
-   users = users.filter(el => el.email != req.params.email);
-   res.send("usuario borrado");
-});
 
-app.delete("/user/borrarVarios/", (req, res) => {
-   let arrayEmail = req.query.email;
-   arrayEmail.forEach(email => {
-      users = users.filter((elemento) => elemento.email != email);
-   });
-   res.send("Se eliminaron todos los usuarios con ese mail");
-});
 
 app.put("/user/cambiar/", (req, res) => {
    users = forEach((user, i) => {
@@ -124,3 +126,80 @@ app.post("/registro/usuario", multerMiddle.single("imagefile"), (req, res) => {
 });
 
 
+/* (async () => {
+   for (let i = 1; i < 101; i++) {
+      axios.get("https://pokeapi.co/api/v2/pokemon/" + i)
+         .then(function (response) {
+            arrayPokemones.push(response.data);
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+         .then(function () {
+            // always executed
+         });
+      await delay(800);
+   }
+   console.log("termino la carga");
+})(); */
+
+/* (async () => {
+   for (let i = 1; i < 201; i++) {
+      axios.get("https://pokeapi.co/api/v2/pokemon-species/" + i)
+         .then(function (response) {
+            arrayPokemones.push(response.data);
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+         .then(function () {
+            // always executed
+         });
+      await delay(800);
+   }
+   console.log("termino la carga");
+})();
+ */
+
+/* (async () => {
+   for (let i = 1; i < 201; i++) {
+      axios.get("https://pokeapi.co/api/v2/evolution-chain/" + i)
+         .then(function (response) {
+            arrayPokemones.push(response.data);
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+         .then(function () {
+            // always executed
+         });
+      await delay(900);
+   }
+   console.log("termino la carga");
+})(); */
+
+
+
+
+/////////////////////////
+/* app.get("/user/unmail/:email", (req, res) => {
+   res.send(users.filter(el => el.email == req.params.email));
+});
+
+app.get("/usersEmail/:email", (req, res) => {
+   let email = req.params.email;
+   let arrayEmail = email.split(",");
+   let resp = [];
+   arrayEmail.forEach((email) => {
+      users.forEach((user) => {
+         if (user.email == email) {
+            resp.push(user);
+         }
+      });
+   })
+   res.send(resp);
+}); */
+
+/* app.get("/user/name/", (req, res) => {
+   res.send(users.filter(el => (el.name === req.query.name)));
+}); */

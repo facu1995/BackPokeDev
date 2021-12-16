@@ -1,7 +1,4 @@
-const pokemonNameURL={
-    "count": 1118,
-    "next": "https://pokeapi.co/api/v2/pokemon?offset=300&limit=300",
-    "previous": null,
+const pokemonNameURL = {
     "results": [
         {
             "name": "bulbasaur",
@@ -1206,4 +1203,6 @@ const pokemonNameURL={
     ]
 }
 
-export default pokemonNameURL;
+module.exports= {
+    pokemonNameURL
+}

@@ -17,9 +17,11 @@ const { moveAllInfo } = require('./mocks/movesAllInfo_mocks');
 const { pokemonAllInfo } = require('./mocks/pokemonAllInfo_mocks');
 const { speciesAll } = require('./mocks/speciesAll_mocks');
 const { evolvesAll } = require('./mocks/evolvesAll_mocks');
+const { userData } = require('./mocks/usuarios_mocks');
 //init
 const { pokemonInit } = require('./initJson/pokemonInitJSON.js');
 const { MoveInit } = require('./initJson/movesInitJSON.js');
+
 
 
 const app = express();
@@ -37,7 +39,6 @@ const multerConfig = multer.diskStorage({
    }
 });
 const multerMiddle = multer({ storage: multerConfig })
-log(movesNameURL.results.length,moveAllInfo.length);
 
 app.use(cors()); // permite conectar con servidores distintas
 app.use(methodOverride());
@@ -49,8 +50,15 @@ app.listen(port, () => {
    log("start server " + port);
 });
 
+log(pokemonNameURL.results.length, movesNameURL.results.length, moveAllInfo.length, pokemonAllInfo.length, speciesAll.length, evolvesAll.length, userData.length);
+
+
 app.get("/users", (req, res) => {
-   res.send(users);
+   res.send(userData);
+});
+app.get("/user/:id", (req, res) => {
+   let i = parseInt(req.params.id);
+   res.send(userData[i]);
 });
 //endPoint Pokemon
 app.get("/pokemon", (req, res) => {
@@ -60,26 +68,27 @@ app.get("/pokemonesAll", (req, res) => {
    res.send(arrayPokemones);
 });
 app.get("/pokemonOne/:id", (req, res) => {
-   let i=parseInt(req.params.id)-1;
+   let i = parseInt(req.params.id) - 1;
    res.send(pokemonAllInfo[i]);
 });
 app.get("/specieOne/:id", (req, res) => {
-   let i=parseInt(req.params.id)-1;
+   let i = parseInt(req.params.id) - 1;
    res.send(speciesAll[i]);
 });
 app.get("/evolvesOne/:id", (req, res) => {
-   let i=parseInt(req.params.id)-1;
+   let i = parseInt(req.params.id) - 1;
    res.send(evolvesAll[i]);
 });
 //endPoint Moves
 app.get("/moves", (req, res) => {
    res.send(movesNameURL);
 });
+
 app.get("/movesAll", (req, res) => {
    res.send(arrayPokemones);
 });
 app.get("/movesOne/:id", (req, res) => {
-   let i=parseInt(req.params.id)-1;
+   let i = parseInt(req.params.id) - 1;
    res.send(moveAllInfo[i]);
 });
 
@@ -99,22 +108,26 @@ app.get("/users/name", (req, res) => {
 })
 
 app.post("/addMove", (req, res) => {
-   const [name,type,power,description]=req.body
-   users.push({ id,name, power,description, type: { name: type } });
+   const [name, type, power, ] = req.body
+   users.push({ id, name, power, description, type: { name: type } });
+   res.send("Se agrego un move");
 });
 
 
 
 app.put("/user/cambiar/", (req, res) => {
-   users = forEach((user, i) => {
-      if (user.email == req.body.email) {
-         users[i].email = req.body.nuevoEmail;
+   const { name, email, pass,id } = req.body;
+   userData.forEach((user, i) => {
+      if (user.email === email) {
+         userData[i].name = name;
+         userData[i].pass = pass;
+         log("cambio un user")
       }
    })
    res.send("usuario ha sido modificado");
 })
 
-app.post("/registro/usuario", multerMiddle.single("imagefile"), (req, res) => {
+/* app.post("/registro/usuario", multerMiddle.single("imagefile"), (req, res) => {
    if (req.file) {
       const { name, email, pass } = req.body;
       const foto = req.file;
@@ -123,6 +136,12 @@ app.post("/registro/usuario", multerMiddle.single("imagefile"), (req, res) => {
    }
    else
       res.send("Error en imagen");
+}); */
+app.post("/add/user", (req, res) => {
+   const { name, email, pass } = req.body;
+   userData.push({ email, name, pass});
+   log( name, email, pass);
+   res.send("Se agrego un usuario");
 });
 
 

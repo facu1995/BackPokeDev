@@ -13,8 +13,12 @@ const delay = require('delay');
 //mocks
 const { pokemonNameURL } = require('./mocks/pokemon_mocks.js');
 const { movesNameURL } = require('./mocks/moves_mocks');
-const { moveAllInfo } = require('./mocks/movesAllInfo_mocks');
-const { pokemonAllInfo } = require('./mocks/pokemonAllInfo_mocks');
+const { moveInfo } = require('./mocks/movesInfo_mocks');
+const { moveInfo2 } = require('./mocks/movesInfo_mocks2');
+const { moveInfo3 } = require('./mocks/movesInfo_mocks3');
+const { pokemonInfo } = require('./mocks/pokemonInfo_mocks');
+const { pokemonInfo2 } = require('./mocks/pokemonInfo_mocks2');
+const { pokemonInfo3 } = require('./mocks/pokemonInfo_mocks3');
 const { speciesAll } = require('./mocks/speciesAll_mocks');
 const { evolvesAll } = require('./mocks/evolvesAll_mocks');
 const { userData } = require('./mocks/usuarios_mocks');
@@ -23,7 +27,8 @@ const { pokemonInit } = require('./initJson/pokemonInitJSON.js');
 const { MoveInit } = require('./initJson/movesInitJSON.js');
 
 
-
+let pokemonAllInfo=[...pokemonInfo,...pokemonInfo2,...pokemonInfo3];
+let moveAllInfo=[...moveInfo,...moveInfo2,...moveInfo3];
 const app = express();
 const log = console.log;
 let port = process.env.PORT || 4000;
@@ -84,8 +89,11 @@ app.get("/moves", (req, res) => {
    res.send(movesNameURL);
 });
 
-app.get("/movesAll", (req, res) => {
-   res.send(arrayPokemones);
+app.get("/movescant", (req, res) => {
+   res.send({cant:parseInt(moveAllInfo.length)});
+});
+app.get("/pokemoncant", (req, res) => {
+   res.send({cant:parseInt(pokemonAllInfo.length)});
 });
 app.get("/movesOne/:id", (req, res) => {
    let i = parseInt(req.params.id) - 1;
@@ -115,6 +123,112 @@ app.post("/addmove", (req, res) => {
    movesNameURL.results.push({ name: name, url: url });
    console.log(id, name, power, type, url);
    res.send("Se agrego un move");
+
+});
+
+app.post("/addpokemon", (req, res) => {
+   const { name, type, description,hp,attack,defense,specialAttack,specialDefense,speed} = req.body;
+   let id = pokemonAllInfo.length + 1;
+   let pokemon={
+    "id": id,
+    "new":1,
+    "moves": [
+        {
+            "move": {
+                "name": "",
+                "url": ""
+            },
+            "version_group_details": [
+                {
+                    "level_learned_at": 0,
+                    "move_learn_method": {
+                        "name": "",
+                        "url": ""
+                    },
+                    "version_group": {
+                        "name": "",
+                        "url": ""
+                    }
+                }
+            ]
+        }
+    ],
+    "name":name,
+    "stats": [
+        {
+            "base_stat": hp,
+            "effort": 0,
+            "stat": {
+                "name": "hp",
+                "url": "https://pokeapi.co/api/v2/stat/1/"
+            }
+        },
+        {
+            "base_stat": attack,
+            "effort": 0,
+            "stat": {
+                "name": "attack",
+                "url": "https://pokeapi.co/api/v2/stat/2/"
+            }
+        },
+        {
+            "base_stat": defense,
+            "effort": 0,
+            "stat": {
+                "name": "defense",
+                "url": "https://pokeapi.co/api/v2/stat/3/"
+            }
+        },
+        {
+            "base_stat": specialAttack,
+            "effort": 1,
+            "stat": {
+                "name": "special-attack",
+                "url": "https://pokeapi.co/api/v2/stat/4/"
+            }
+        },
+        {
+            "base_stat": specialDefense,
+            "effort": 0,
+            "stat": {
+                "name": "special-defense",
+                "url": "https://pokeapi.co/api/v2/stat/5/"
+            }
+        },
+        {
+            "base_stat": speed,
+            "effort": 0,
+            "stat": {
+                "name": "speed",
+                "url": "https://pokeapi.co/api/v2/stat/6/"
+            }
+        }
+    ],
+    "types": [
+        {
+            "slot": 1,
+            "type": {
+                "name": type,
+                "url": ""
+            }
+        }
+    ],
+};
+   console.log(pokemonAllInfo.length,id)
+   let url = "https://pokeapi.co/api/v2/pokemon/" + id+"/";
+   pokemonAllInfo.push(pokemon);
+   console.log(pokemonAllInfo.length);
+   speciesAll.push({
+      flavor_text_entries:[
+         {
+         flavor_text:description
+         }
+      ],
+      evolution_chain:{}
+   })
+   pokemonNameURL.results.push({ name: name, url: url });
+   console.log(id,name, type, description,hp,attack,defense,specialAttack,specialDefense,speed);
+   res.send("Se agrego un pokemon");
 
 });
 
@@ -163,9 +277,25 @@ app.post("/add/user", (req, res) => {
    res.send("Se agrego un usuario");
 });
 
-
+/* let arrayPokemones=[];
+(async () => {
+   for (let i = 601; i < 827; i++) {
+      axios.get("https://pokeapi.co/api/v2/move/" + i)
+         .then(function (response) {
+            arrayPokemones.push(response.data);
+         })
+         .catch(function (error) {
+            console.log(error);
+         })
+         .then(function () {
+            // always executed
+         });
+      await delay(800);
+   }
+   console.log("termino la carga");
+})(); */
 /* (async () => {
-   for (let i = 1; i < 101; i++) {
+   for (let i = 201; i < 301; i++) {
       axios.get("https://pokeapi.co/api/v2/pokemon/" + i)
          .then(function (response) {
             arrayPokemones.push(response.data);
@@ -182,7 +312,7 @@ app.post("/add/user", (req, res) => {
 })(); */
 
 /* (async () => {
-   for (let i = 1; i < 201; i++) {
+   for (let i = 201; i < 301; i++) {
       axios.get("https://pokeapi.co/api/v2/pokemon-species/" + i)
          .then(function (response) {
             arrayPokemones.push(response.data);

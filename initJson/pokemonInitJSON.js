@@ -1,25 +1,5 @@
 const pokemonInit={
-    "abilities": [
-        {
-            "ability": {
-                "name": "",
-                "url": ""
-            },
-            "is_hidden": "",
-            "slot": 1
-        },
-        
-    ],
-    "base_experience": "",
-    "forms": [
-        {
-            "name": "",
-            "url": ""
-        }
-    ],
     "id": 7,
-    "is_default": true,
-    "location_area_encounters": "",
     "moves": [
         {
             "move": {
@@ -42,12 +22,6 @@ const pokemonInit={
         }
     ],
     "name": "",
-    "order": 0,
-    "past_types": [],
-    "species": {
-        "name": "",
-        "url": ""
-    },
     "stats": [
         {
             "base_stat": 0,

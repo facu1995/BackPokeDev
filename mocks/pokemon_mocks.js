@@ -1199,6 +1199,10 @@ const pokemonNameURL = {
         {
             "name": "skitty",
             "url": "https://pokeapi.co/api/v2/pokemon/300/"
+        },
+        {
+            "name": "delcatty",
+            "url": "https://pokeapi.co/api/v2/pokemon/301/"
         }
     ]
 }

@@ -107,16 +107,35 @@ app.get("/users/name", (req, res) => {
    res.send(resul);
 })
 
-app.post("/addMove", (req, res) => {
-   const [name, type, power, ] = req.body
-   users.push({ id, name, power, description, type: { name: type } });
+app.post("/addmove", (req, res) => {
+   const { name, type, power } = req.body;
+   let id = moveAllInfo.length + 1;
+   let url = "https://pokeapi.co/api/v2/move/" + id+"/";
+   moveAllInfo.push({ id, name, power, type: { name: type } });
+   movesNameURL.results.push({ name: name, url: url });
+   console.log(id, name, power, type, url);
    res.send("Se agrego un move");
+
 });
 
 
+app.put("/editmove", (req, res) => {
+   const { name, power, type, id } = req.body;
+   let i = id-1;
+   movesNameURL.results[i].name = name;
+   if (moveAllInfo[i]) {
+      log(moveAllInfo[i])
+      moveAllInfo[i].name = name;
+      moveAllInfo[i].type.name = type;
+      moveAllInfo[i].power = power;
+      log("cambio un move")
+   }
+   res.send("usuario ha sido modificado");
+})
+
 
 app.put("/user/cambiar/", (req, res) => {
-   const { name, email, pass,id } = req.body;
+   const { name, email, pass, id } = req.body;
    userData.forEach((user, i) => {
       if (user.email === email) {
          userData[i].name = name;
@@ -139,8 +158,8 @@ app.put("/user/cambiar/", (req, res) => {
 }); */
 app.post("/add/user", (req, res) => {
    const { name, email, pass } = req.body;
-   userData.push({ email, name, pass});
-   log( name, email, pass);
+   userData.push({ email, name, pass });
+   log(name, email, pass);
    res.send("Se agrego un usuario");
 });
 

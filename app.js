@@ -357,19 +357,25 @@ app.post("/add/user", (req, res) => {
 
 app.post("/login", (req, res) => {
    const { email, pass } = req.body;
-   token=false;
+   let token=false;
+   let name = '';
+   let id = '';
    userData.forEach((user,idx)=>{ 
       if(user.email===email & user.pass===pass){
          token=true;
+         name = user.name;
+         id = idx;
       }
    }); 
    if(token){
       log("el usuario existe");
+      res.send({token:token, name, id})
+
    }
    else{
       log("no existe");
+      res.send({token:token})
    }
-   res.send({token:token})
 });
 
 /* let arrayPokemones=[];

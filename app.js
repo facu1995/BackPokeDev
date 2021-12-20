@@ -339,11 +339,11 @@ app.put("/user/cambiar/", (req, res) => {
 })
 
 
-app.put("/user/hire pokemon/", (req, res) => {
+app.put("/user/hirepokemon/", (req, res) => {
    const { id, idUser } = req.body;
    userData[idUser] = {
       ...userData[idUser],
-      pokemons: [...pokemons, id]
+      pokemons: [...userData[idUser].pokemons, id]
    }
    res.send("usuario ", idUser + " agrego a ", id);
 })

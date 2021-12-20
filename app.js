@@ -28,8 +28,8 @@ const { pokemonInit } = require('./initJson/pokemonInitJSON.js');
 const { MoveInit } = require('./initJson/movesInitJSON.js');
 
 
-let pokemonAllInfo=[...pokemonInfo,...pokemonInfo2,...pokemonInfo3];
-let moveAllInfo=[...moveInfo,...moveInfo2,...moveInfo3];
+let pokemonAllInfo = [...pokemonInfo, ...pokemonInfo2, ...pokemonInfo3];
+let moveAllInfo = [...moveInfo, ...moveInfo2, ...moveInfo3];
 const app = express();
 const log = console.log;
 let port = process.env.PORT || 4000;
@@ -60,10 +60,10 @@ log(pokemonNameURL.results.length, movesNameURL.results.length, moveAllInfo.leng
 
 //FOTOS
 app.use(express.static('bucket'));
-app.get('/bucket/:img', function(req, res){
-   let img =req.params.img;
-   res.sendFile(path.resolve('bucket/'+img));
-}); 
+app.get('/bucket/:img', function (req, res) {
+   let img = req.params.img;
+   res.sendFile(path.resolve('bucket/' + img));
+});
 
 app.get("/users", (req, res) => {
    res.send(userData);
@@ -97,10 +97,10 @@ app.get("/moves", (req, res) => {
 });
 
 app.get("/movescant", (req, res) => {
-   res.send({cant:parseInt(moveAllInfo.length)});
+   res.send({ cant: parseInt(moveAllInfo.length) });
 });
 app.get("/pokemoncant", (req, res) => {
-   res.send({cant:parseInt(pokemonAllInfo.length)});
+   res.send({ cant: parseInt(pokemonAllInfo.length) });
 });
 app.get("/movesOne/:id", (req, res) => {
    let i = parseInt(req.params.id) - 1;
@@ -125,7 +125,7 @@ app.get("/users/name", (req, res) => {
 app.post("/addmove", (req, res) => {
    const { name, type, power } = req.body;
    let id = moveAllInfo.length + 1;
-   let url = "https://pokeapi.co/api/v2/move/" + id+"/";
+   let url = "https://pokeapi.co/api/v2/move/" + id + "/";
    moveAllInfo.push({ id, name, power, type: { name: type } });
    movesNameURL.results.push({ name: name, url: url });
    console.log(id, name, power, type, url);
@@ -135,7 +135,7 @@ app.post("/addmove", (req, res) => {
 
 app.put("/editmove", (req, res) => {
    const { name, power, type, id } = req.body;
-   let i = id-1;
+   let i = id - 1;
    movesNameURL.results[i].name = name;
    if (moveAllInfo[i]) {
       log(moveAllInfo[i])
@@ -148,175 +148,175 @@ app.put("/editmove", (req, res) => {
 })
 
 app.post("/addpokemon", (req, res) => {
-   const { name, type, description,hp,attack,defense,specialAttack,specialDefense,speed} = req.body;
+   const { name, type, description, hp, attack, defense, specialAttack, specialDefense, speed } = req.body;
    let id = pokemonAllInfo.length + 1;
-   let pokemon={
-    "id": id,
-    "new":1,
-    "moves": [
-        {
+   let pokemon = {
+      "id": id,
+      "new": 1,
+      "moves": [
+         {
             "move": {
-                "name": "",
-                "url": ""
+               "name": "",
+               "url": ""
             },
             "version_group_details": [
-                {
-                    "level_learned_at": 0,
-                    "move_learn_method": {
-                        "name": "",
-                        "url": ""
-                    },
-                    "version_group": {
-                        "name": "",
-                        "url": ""
-                    }
-                }
+               {
+                  "level_learned_at": 0,
+                  "move_learn_method": {
+                     "name": "",
+                     "url": ""
+                  },
+                  "version_group": {
+                     "name": "",
+                     "url": ""
+                  }
+               }
             ]
-        }
-    ],
-    "name":name,
-    "stats": [
-        {
+         }
+      ],
+      "name": name,
+      "stats": [
+         {
             "base_stat": hp,
             "effort": 0,
             "stat": {
-                "name": "hp",
-                "url": "https://pokeapi.co/api/v2/stat/1/"
+               "name": "hp",
+               "url": "https://pokeapi.co/api/v2/stat/1/"
             }
-        },
-        {
+         },
+         {
             "base_stat": attack,
             "effort": 0,
             "stat": {
-                "name": "attack",
-                "url": "https://pokeapi.co/api/v2/stat/2/"
+               "name": "attack",
+               "url": "https://pokeapi.co/api/v2/stat/2/"
             }
-        },
-        {
+         },
+         {
             "base_stat": defense,
             "effort": 0,
             "stat": {
-                "name": "defense",
-                "url": "https://pokeapi.co/api/v2/stat/3/"
+               "name": "defense",
+               "url": "https://pokeapi.co/api/v2/stat/3/"
             }
-        },
-        {
+         },
+         {
             "base_stat": specialAttack,
             "effort": 1,
             "stat": {
-                "name": "special-attack",
-                "url": "https://pokeapi.co/api/v2/stat/4/"
+               "name": "special-attack",
+               "url": "https://pokeapi.co/api/v2/stat/4/"
             }
-        },
-        {
+         },
+         {
             "base_stat": specialDefense,
             "effort": 0,
             "stat": {
-                "name": "special-defense",
-                "url": "https://pokeapi.co/api/v2/stat/5/"
+               "name": "special-defense",
+               "url": "https://pokeapi.co/api/v2/stat/5/"
             }
-        },
-        {
+         },
+         {
             "base_stat": speed,
             "effort": 0,
             "stat": {
-                "name": "speed",
-                "url": "https://pokeapi.co/api/v2/stat/6/"
+               "name": "speed",
+               "url": "https://pokeapi.co/api/v2/stat/6/"
             }
-        }
-    ],
-    "types": [
-        {
+         }
+      ],
+      "types": [
+         {
             "slot": 1,
             "type": {
-                "name": type,
-                "url": ""
+               "name": type,
+               "url": ""
             }
-        }
-    ],
-};
-   console.log(pokemonAllInfo.length,id)
-   let url = "https://pokeapi.co/api/v2/pokemon/" + id+"/";
+         }
+      ],
+   };
+   console.log(pokemonAllInfo.length, id)
+   let url = "https://pokeapi.co/api/v2/pokemon/" + id + "/";
    pokemonAllInfo.push(pokemon);
    console.log(pokemonAllInfo.length);
    speciesAll.push({
-      flavor_text_entries:[
+      flavor_text_entries: [
          {
-         flavor_text:description
+            flavor_text: description
          }
       ],
-      evolution_chain:{}
+      evolution_chain: {}
    })
    pokemonNameURL.results.push({ name: name, url: url });
-   console.log(id,name, type, description,hp,attack,defense,specialAttack,specialDefense,speed);
+   console.log(id, name, type, description, hp, attack, defense, specialAttack, specialDefense, speed);
    res.send("Se agrego un pokemon");
 
 });
 
 app.put("/editpokemon", (req, res) => {
-   const { id,hp,description,attack,defense,specialAttack,specialDefense,speed} = req.body;
-   let i = id-1;
+   const { id, hp, description, attack, defense, specialAttack, specialDefense, speed } = req.body;
+   let i = id - 1;
    if (pokemonAllInfo[i]) {
       log(pokemonAllInfo[i])
-      pokemonAllInfo[i]={
+      pokemonAllInfo[i] = {
          ...pokemonAllInfo[i],
          "stats": [
             {
-                "base_stat": hp,
-                "effort": 0,
-                "stat": {
-                    "name": "hp",
-                    "url": "https://pokeapi.co/api/v2/stat/1/"
-                }
+               "base_stat": hp,
+               "effort": 0,
+               "stat": {
+                  "name": "hp",
+                  "url": "https://pokeapi.co/api/v2/stat/1/"
+               }
             },
             {
-                "base_stat": attack,
-                "effort": 0,
-                "stat": {
-                    "name": "attack",
-                    "url": "https://pokeapi.co/api/v2/stat/2/"
-                }
+               "base_stat": attack,
+               "effort": 0,
+               "stat": {
+                  "name": "attack",
+                  "url": "https://pokeapi.co/api/v2/stat/2/"
+               }
             },
             {
-                "base_stat": defense,
-                "effort": 0,
-                "stat": {
-                    "name": "defense",
-                    "url": "https://pokeapi.co/api/v2/stat/3/"
-                }
+               "base_stat": defense,
+               "effort": 0,
+               "stat": {
+                  "name": "defense",
+                  "url": "https://pokeapi.co/api/v2/stat/3/"
+               }
             },
             {
-                "base_stat": specialAttack,
-                "effort": 1,
-                "stat": {
-                    "name": "special-attack",
-                    "url": "https://pokeapi.co/api/v2/stat/4/"
-                }
+               "base_stat": specialAttack,
+               "effort": 1,
+               "stat": {
+                  "name": "special-attack",
+                  "url": "https://pokeapi.co/api/v2/stat/4/"
+               }
             },
             {
-                "base_stat": specialDefense,
-                "effort": 0,
-                "stat": {
-                    "name": "special-defense",
-                    "url": "https://pokeapi.co/api/v2/stat/5/"
-                }
+               "base_stat": specialDefense,
+               "effort": 0,
+               "stat": {
+                  "name": "special-defense",
+                  "url": "https://pokeapi.co/api/v2/stat/5/"
+               }
             },
             {
-                "base_stat": speed,
-                "effort": 0,
-                "stat": {
-                    "name": "speed",
-                    "url": "https://pokeapi.co/api/v2/stat/6/"
-                }
+               "base_stat": speed,
+               "effort": 0,
+               "stat": {
+                  "name": "speed",
+                  "url": "https://pokeapi.co/api/v2/stat/6/"
+               }
             }
-        ]
+         ]
       }
-      log("cambio un pokemon "+pokemonAllInfo[i].name);
-      speciesAll[i]={
+      log("cambio un pokemon " + pokemonAllInfo[i].name);
+      speciesAll[i] = {
          ...speciesAll[i],
-         flavor_text_entries:[
+         flavor_text_entries: [
             {
-            flavor_text:description
+               flavor_text: description
             }
          ]
       }
@@ -338,11 +338,23 @@ app.put("/user/cambiar/", (req, res) => {
    res.send("usuario ha sido modificado");
 })
 
+
+app.put("/user/hire pokemon/", (req, res) => {
+   const { id, idUser } = req.body;
+   userData[idUser] = {
+      ...userData[idUser],
+      pokemons: [...pokemons, id]
+   }
+   res.send("usuario ", idUser + " agrego a ", id);
+})
+      
+
 /* app.post("/registro/usuario", multerMiddle.single("imagefile"), (req, res) => {
+   log("entro", req)
    if (req.file) {
       const { name, email, pass } = req.body;
       const foto = req.file;
-      users.push({ email, name, pass, foto });
+      console.log({ email, name, pass, foto })
       res.send("Imagen guardada....");
    }
    else
@@ -350,7 +362,7 @@ app.put("/user/cambiar/", (req, res) => {
 }); */
 app.post("/add/user", (req, res) => {
    const { name, email, pass } = req.body;
-   userData.push({ email, name, pass });
+   userData.push({ email, name, pass,"pokemons":[]});
    log(name, email, pass);
    res.send("Se agrego un usuario");
 });
@@ -377,6 +389,7 @@ app.post("/login", (req, res) => {
       res.send({token:token})
    }
 });
+
 
 /* let arrayPokemones=[];
 (async () => {

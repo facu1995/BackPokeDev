@@ -133,6 +133,20 @@ app.post("/addmove", (req, res) => {
 
 });
 
+app.put("/editmove", (req, res) => {
+   const { name, power, type, id } = req.body;
+   let i = id-1;
+   movesNameURL.results[i].name = name;
+   if (moveAllInfo[i]) {
+      log(moveAllInfo[i])
+      moveAllInfo[i].name = name;
+      moveAllInfo[i].type.name = type;
+      moveAllInfo[i].power = power;
+      log("cambio un move")
+   }
+   res.send("movimiento ha sido modificado");
+})
+
 app.post("/addpokemon", (req, res) => {
    const { name, type, description,hp,attack,defense,specialAttack,specialDefense,speed} = req.body;
    let id = pokemonAllInfo.length + 1;
@@ -310,19 +324,6 @@ app.put("/editpokemon", (req, res) => {
    res.send("pokemon ha sido modificado");
 })
 
-app.put("/editmove", (req, res) => {
-   const { name, power, type, id } = req.body;
-   let i = id-1;
-   movesNameURL.results[i].name = name;
-   if (moveAllInfo[i]) {
-      log(moveAllInfo[i])
-      moveAllInfo[i].name = name;
-      moveAllInfo[i].type.name = type;
-      moveAllInfo[i].power = power;
-      log("cambio un move")
-   }
-   res.send("movimiento ha sido modificado");
-})
 
 
 app.put("/user/cambiar/", (req, res) => {
@@ -352,6 +353,23 @@ app.post("/add/user", (req, res) => {
    userData.push({ email, name, pass });
    log(name, email, pass);
    res.send("Se agrego un usuario");
+});
+
+app.post("/login", (req, res) => {
+   const { email, pass } = req.body;
+   token=false;
+   userData.forEach((user,idx)=>{ 
+      if(user.email===email & user.pass===pass){
+         token=true;
+      }
+   }); 
+   if(token){
+      log("el usuario existe");
+   }
+   else{
+      log("no existe");
+   }
+   res.send({token:token})
 });
 
 /* let arrayPokemones=[];

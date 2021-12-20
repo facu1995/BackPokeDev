@@ -5,12 +5,13 @@ const multer = require("multer");
 let { v4: uuid } = require("uuid"); //se usar para el hash
 const dayjs = require("dayjs");
 const axios = require("axios");
-
+var path = require('path');
 //delay
 const delay = require('delay');
 
 
 //mocks
+
 const { pokemonNameURL } = require('./mocks/pokemon_mocks.js');
 const { movesNameURL } = require('./mocks/moves_mocks');
 const { moveInfo } = require('./mocks/movesInfo_mocks');
@@ -57,6 +58,12 @@ app.listen(port, () => {
 
 log(pokemonNameURL.results.length, movesNameURL.results.length, moveAllInfo.length, pokemonAllInfo.length, speciesAll.length, evolvesAll.length, userData.length);
 
+//FOTOS
+app.use(express.static('bucket'));
+app.get('/bucket/:img', function(req, res){
+   let img =req.params.img;
+   res.sendFile(path.resolve('bucket/'+img));
+}); 
 
 app.get("/users", (req, res) => {
    res.send(userData);
@@ -232,6 +239,76 @@ app.post("/addpokemon", (req, res) => {
 
 });
 
+app.put("/editpokemon", (req, res) => {
+   const { id,hp,description,attack,defense,specialAttack,specialDefense,speed} = req.body;
+   let i = id-1;
+   if (pokemonAllInfo[i]) {
+      log(pokemonAllInfo[i])
+      pokemonAllInfo[i]={
+         ...pokemonAllInfo[i],
+         "stats": [
+            {
+                "base_stat": hp,
+                "effort": 0,
+                "stat": {
+                    "name": "hp",
+                    "url": "https://pokeapi.co/api/v2/stat/1/"
+                }
+            },
+            {
+                "base_stat": attack,
+                "effort": 0,
+                "stat": {
+                    "name": "attack",
+                    "url": "https://pokeapi.co/api/v2/stat/2/"
+                }
+            },
+            {
+                "base_stat": defense,
+                "effort": 0,
+                "stat": {
+                    "name": "defense",
+                    "url": "https://pokeapi.co/api/v2/stat/3/"
+                }
+            },
+            {
+                "base_stat": specialAttack,
+                "effort": 1,
+                "stat": {
+                    "name": "special-attack",
+                    "url": "https://pokeapi.co/api/v2/stat/4/"
+                }
+            },
+            {
+                "base_stat": specialDefense,
+                "effort": 0,
+                "stat": {
+                    "name": "special-defense",
+                    "url": "https://pokeapi.co/api/v2/stat/5/"
+                }
+            },
+            {
+                "base_stat": speed,
+                "effort": 0,
+                "stat": {
+                    "name": "speed",
+                    "url": "https://pokeapi.co/api/v2/stat/6/"
+                }
+            }
+        ]
+      }
+      log("cambio un pokemon "+pokemonAllInfo[i].name);
+      speciesAll[i]={
+         ...speciesAll[i],
+         flavor_text_entries:[
+            {
+            flavor_text:description
+            }
+         ]
+      }
+   }
+   res.send("pokemon ha sido modificado");
+})
 
 app.put("/editmove", (req, res) => {
    const { name, power, type, id } = req.body;
@@ -244,7 +321,7 @@ app.put("/editmove", (req, res) => {
       moveAllInfo[i].power = power;
       log("cambio un move")
    }
-   res.send("usuario ha sido modificado");
+   res.send("movimiento ha sido modificado");
 })
 
 
